@@ -1,6 +1,8 @@
 const axios = require('axios');
 const FormData = require('form-data')
-const { parse } = require('node-html-parser');
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
 
 var bodyFormData = new FormData();
 bodyFormData.append('qsearch', 'flundar');
@@ -13,10 +15,13 @@ axios({
             "Content-Type": "multipart/form-data"
         },
     })
-    .then(function (response) {
-        var bilgi = parse(response.data)
-        console.log(bilgi.querySelectorAll('#main > table:nth-child(3) > tbody > tr:nth-child(2) > td:nth-child(2)'))
+    .then(async function (response) {
+        var bilgi = new JSDOM(response.data);
+        console.log(bilgi.window.document.querySelector('#main > table:nth-child(3) > tbody > tr:nth-child(4) > td:nth-child(2)').textContent);
     })
     .catch(function (error) {
         console.log(error);
     });
+
+
+
